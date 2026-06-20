@@ -259,18 +259,10 @@ void* GetClosestEnemyCached()
         CachedEnemy = GetClosestEnemy();
     }
 
-//    if (!IsSafeEnemy(CachedEnemy))
-//        CachedEnemy = nullptr;
-
-//    return CachedEnemy;
+    return CachedEnemy;
 }
 
-
-
 // ENEMY COUNT
-
-
-
 
 // ESP
 inline void DrawSimpleESP(float screenWidth, float screenHeight)
@@ -281,18 +273,20 @@ inline void DrawSimpleESP(float screenWidth, float screenHeight)
     ImDrawList* draw = ImGui::GetBackgroundDrawList();
     if (!draw)
         return;
-if (!HideFov) {
-    ImVec2 center = ImVec2(screenWidth / 2.0f, screenHeight / 2.0f);
 
-    int segments = (int)(Fov_Aim * 0.8f);
+    if (!HideFov) {
+        ImVec2 center = ImVec2(screenWidth / 2.0f, screenHeight / 2.0f);
 
-    draw->AddCircle(
-        center,
-        Fov_Aim,
-        ImGui::ColorConvertFloat4ToU32(EspFovColor),
-        segments,
-        1.8f
-    );
+        int segments = (int)(Fov_Aim * 0.8f);
+
+        draw->AddCircle(
+            center,
+            Fov_Aim,
+            ImGui::ColorConvertFloat4ToU32(EspFovColor),
+            segments,
+            1.8f
+        );
+    }
 }
         
 //    if (!IsMatchValid())
