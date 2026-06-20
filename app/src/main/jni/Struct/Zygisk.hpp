@@ -284,7 +284,7 @@ inline bool Api::pltHookCommit() {
 } // namespace zygisk
 
 __attribute__((visibility("default"))) __attribute__((used))
-extern "C" void zygisk_module_entry(zygisk::api_table *, JNIEnv *);
+extern "C" void zygisk_module_entry(zygisk::internal::api_table *, JNIEnv *);
 
 __attribute__((visibility("default"))) __attribute__((used))
 extern "C" void zygisk_companion_entry(int);
