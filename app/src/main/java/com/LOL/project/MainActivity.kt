@@ -10,15 +10,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnLogin = findViewById<Button>(R.id.OpenMenu)
         
         btnLogin.setOnClickListener {
-            // This intent starts the service that loads the cheat
             val intent = Intent(this, MenuService::class.java)
             startService(intent)
-            
-            // Close the app to show the menu over the game
-            finish() 
+            finish()
         }
     }
 }
