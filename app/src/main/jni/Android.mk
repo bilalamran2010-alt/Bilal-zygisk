@@ -1,8 +1,10 @@
 LOCAL_PATH := $(call my-dir)
 
 # ============================================================================#
+# Prebuilt Dobby Library
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libdobby
+# This will automatically pick up arm64-v8a/libdobby.a because we forced 64-bit in Application.mk
 LOCAL_SRC_FILES := Dobby/$(TARGET_ARCH_ABI)/libdobby.a
 include $(PREBUILT_STATIC_LIBRARY)
 # ============================================================================#
@@ -11,6 +13,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE           := LOL
 
+# Flags and Includes
 LOCAL_CFLAGS           := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w
 LOCAL_CFLAGS           += -fno-rtti -fno-exceptions -fpermissive
 LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -s -std=c++17
@@ -40,18 +43,12 @@ FILE_LIST              += $(wildcard $(LOCAL_PATH)/KittyMemory/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/IL2CppSDKGenerator/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/*.cpp)
 
-LOCAL_SRC_FILES        := $(FILE_LIST:$(LOCAL_PATH)/%=%)
+# And64InlineHook for 64-bit support
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/And64InlineHook
+HOOK_SRC               := $(wildcard $(LOCAL_PATH)/include/And64InlineHook/*.c*)
+FILE_LIST              += $(HOOK_SRC:$(LOCAL_PATH)/%=%)
 
-# Architecture specific hooks
-ifeq ($(TARGET_ARCH_ABI), arm64-v8a)
-    LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/And64InlineHook
-    HOOK_SRC := $(wildcard $(LOCAL_PATH)/include/And64InlineHook/*.c*)
-    LOCAL_SRC_FILES += $(HOOK_SRC:$(LOCAL_PATH)/%=%)
-else ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
-    LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/Substrate
-    HOOK_SRC := $(wildcard $(LOCAL_PATH)/include/Substrate/*.c*)
-    LOCAL_SRC_FILES += $(HOOK_SRC:$(LOCAL_PATH)/%=%)
-endif
+LOCAL_SRC_FILES        := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 
 LOCAL_STATIC_LIBRARIES := libdobby
 LOCAL_CPP_FEATURES     := exceptions
