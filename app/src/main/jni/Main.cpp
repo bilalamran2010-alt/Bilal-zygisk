@@ -15,6 +15,17 @@
 #include "fonts/FontAwesome6_solid.h"
 #include "ImGui/Toggle.h"
 #include "ImGui/Theme.h"
+#include <fstream>
+#include <string>
+
+bool IsValidPackage() {
+    std::ifstream ifs("/proc/self/cmdline");
+    std::string cmdline;
+    if (ifs) {
+        std::getline(ifs, cmdline, '\0');
+    }
+    return cmdline == "com.dts.freefiremax";
+}
 
 Config cfg; 
 GetTouch_t old_GetTouch = nullptr;
