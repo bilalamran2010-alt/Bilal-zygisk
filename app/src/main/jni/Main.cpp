@@ -22,9 +22,6 @@ bool fourFingerPressed = false;
 bool HideFullMenu = false;
 bool NewBox = false;
 
-typedef UnityEngine_Touch_Fields (*GetTouch_t)(int index);
-GetTouch_t old_GetTouch = nullptr;
-
 #define ATTACH_JNI(env)                     \
     JNIEnv* env = nullptr;                 \
     bool attached = false;                 \
