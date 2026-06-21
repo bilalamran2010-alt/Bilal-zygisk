@@ -1,4 +1,4 @@
-package com.bilal.zygisktool
+package com.LOL.project
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,4 +9,3 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 }
-
