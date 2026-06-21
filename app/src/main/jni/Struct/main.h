@@ -28,6 +28,6 @@ struct Config {
     } esp;
 };
 
-inline Config cfg;
+inline Config cfg; 
 
 #endif

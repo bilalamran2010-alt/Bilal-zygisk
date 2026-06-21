@@ -1,5 +1,4 @@
 #pragma once
-extern Config cfg;
 extern bool HasOriginalPos;
 #include <stdio.h>
 #include <unistd.h>
