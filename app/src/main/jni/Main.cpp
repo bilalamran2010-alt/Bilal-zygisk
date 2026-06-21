@@ -8,7 +8,7 @@
 #include <Il2Cpp.h>
 #include <jni.h>
 #include "Struct/Zygisk.hpp"
-#include "Defines.h"
+#include "Struct/Defines.h"
 #include "Struct/main.h"
 #include "Struct/Gui.hpp"
 #include "Struct/lol_Hooks.h"
