@@ -8,7 +8,7 @@
 #include "imgui.h"
 #include "imgui_impl_android.h"
 #include "imgui_impl_opengl3.h"
-#include "main.h"
+#include "Defines.h"
 #include "Struct/tools.hpp"
 
 #include "Icon/OPPOSans-H.h"
