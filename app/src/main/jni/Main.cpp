@@ -18,8 +18,6 @@
 #include <fstream>
 #include <string>
 
-bool isAuthorized = false;
-
 bool IsValidPackage() {
     std::ifstream ifs("/proc/self/cmdline");
     std::string cmdline;
@@ -391,14 +389,21 @@ void StartHacks() {
         usleep(1000);
     }
 }
+extern "C" JNIEXPORT void JNICALL
+Java_com_LOL_project_MenuService_verifyKeyNative(JNIEnv* env, jobject obj, jstring key) {
+    const char *k = env->GetStringUTFChars(key, 0);
+    
+    if (std::string(k) == "SECRET_KEY_123") {
+        isAuthorized = true;
+    } else {
+        isAuthorized = false;
+    }
+    
+    env->ReleaseStringUTFChars(key, k);
+}
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     jvm = vm;
     std::thread(StartHacks).detach();
     return JNI_VERSION_1_6;
-}
-
-extern "C" JNIEXPORT void JNICALL
-Java_com_LOL_project_MenuService_setAuthorized(JNIEnv* env, jobject obj, jboolean status) {
-    isAuthorized = status;
 }
