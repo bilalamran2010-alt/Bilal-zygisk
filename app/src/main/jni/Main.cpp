@@ -55,31 +55,39 @@ bool BlockUnityTouch = false;
 static ImVec2 tapPos(50, 50);
 static int MenuTab = 0;
 
-void hack_thread() {
+void *hack_thread(void *) {
+    sleep(10);
+
+    if (!IsValidPackage()) {
+        return nullptr;
+    }
+
     pid_t pid = getpid();
+    
     do {
         il2cpp_base = get_module_base(pid, "libil2cpp.so");
-        sleep(7);
-    } while (!il2cpp_base);
+        sleep(1);
+    } while (il2cpp_base == 0);
 
     do {
         unity_base = get_module_base(pid, "libunity.so");
         sleep(1);
-    } while (!unity_base);
+    } while (unity_base == 0);
 
     Il2CppAttach();
     InitPatches();
 
-    if (Class_Input__GetTouch) {
+    if (Class_Input__GetTouch != 0) {
         DobbyHook((void *)Class_Input__GetTouch, (void *)hook_GetTouch, (void **)&old_GetTouch);
     }
 
     while (true) {
         if (cfg.aim.legit) {
-           AimbotLegitVoid();
+            AimbotLegitVoid();
         }
-        usleep(1000); 
+        usleep(1000);
     }
+    return nullptr;
 }
 
 bool ToggleSwitch(const char* id, bool* v) {
@@ -346,7 +354,7 @@ inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
 inline void StartGUI() {
     void *ptr_eglSwapBuffer = DobbySymbolResolver("/system/lib/libEGL.so", "eglSwapBuffers");
     if (ptr_eglSwapBuffer != nullptr) {
-        DobbyHook((void *)ptr_eglSwapBuffer, (void *)hook_eglSwapBuffers, (void **)&old_eglSwapBuffers);
+       // DobbyHook((void *)ptr_eglSwapBuffer, (void *)hook_eglSwapBuffers, (void **)&old_eglSwapBuffers);
         LOGD("GUI started successfully");
     }
 }
