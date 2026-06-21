@@ -1,5 +1,4 @@
 #pragma once
-extern bool HasOriginalPos;
 #include "main.h"
 #include <stdio.h>
 #include <unistd.h>

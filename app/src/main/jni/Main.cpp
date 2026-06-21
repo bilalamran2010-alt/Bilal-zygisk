@@ -1,3 +1,5 @@
+#include "Struct/main.h"
+#include "Struct/lol_Hooks.h"
 #include <android/log.h>
 #include <unistd.h>
 #include <thread>
@@ -9,12 +11,16 @@
 #include <jni.h>
 #include "Struct/Zygisk.hpp"
 #include "Struct/Defines.h"
-#include "Struct/main.h"
 #include "Struct/Gui.hpp"
-#include "Struct/lol_Hooks.h"
 #include "fonts/FontAwesome6_solid.h"
 #include "ImGui/Toggle.h"
 #include "ImGui/Theme.h"
+Config cfg; 
+GetTouch_t old_GetTouch = nullptr;
+bool HasOriginalPos = false;
+bool fourFingerPressed = false;
+bool HideFullMenu = false;
+bool NewBox = false;
 uintptr_t il2cpp_base = 0;
 uintptr_t unity_base = 0;
 
