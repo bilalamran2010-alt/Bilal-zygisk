@@ -8,10 +8,11 @@ import android.os.Looper
 import android.widget.Toast
 import java.net.HttpURLConnection
 import java.net.URL
+import java.io.OutputStream
 
 class MenuService : Service() {
 
-    private val SERVER_URL = "https://bilal828.pythonanywhere.com/verify?key="
+    private val SERVER_URL = "https://bilal828.pythonanywhere.com/verify"
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -30,16 +31,28 @@ class MenuService : Service() {
     private fun verifyKey(key: String) {
         Thread {
             try {
-                val url = URL(SERVER_URL + key)
+                val url = URL(SERVER_URL)
                 val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
+                connection.requestMethod = "POST"
+                connection.setRequestProperty("Content-Type", "application/json; utf-8")
+                connection.setRequestProperty("Accept", "application/json")
+                connection.doOutput = true
                 connection.connectTimeout = 10000
+
+                // Sending key and device_id as JSON
+                val jsonInputString = "{\"key\": \"$key\", \"device_id\": \"android_device\"}"
+                
+                connection.outputStream.use { os: OutputStream ->
+                    val input = jsonInputString.toByteArray(Charsets.UTF_8)
+                    os.write(input, 0, input.size)
+                }
 
                 val responseCode = connection.responseCode
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val response = connection.inputStream.bufferedReader().use { it.readText() }.trim()
+                    val response = connection.inputStream.bufferedReader().use { it.readText() }
                     
-                    if (response == "true") {
+                    // Checking if response contains "valid": true
+                    if (response.contains("\"valid\": true")) {
                         showToast("Accepted")
                         System.loadLibrary("LOL")
                     } else {
