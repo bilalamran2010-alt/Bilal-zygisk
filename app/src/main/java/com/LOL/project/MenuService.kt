@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.widget.Toast
 import java.net.HttpURLConnection
 import java.net.URL
@@ -29,6 +30,9 @@ class MenuService : Service() {
     }
 
     private fun verifyKey(key: String) {
+        // Get Unique Device ID
+        val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        
         Thread {
             try {
                 val url = URL(SERVER_URL)
@@ -39,8 +43,7 @@ class MenuService : Service() {
                 connection.doOutput = true
                 connection.connectTimeout = 10000
 
-                // Sending key and device_id as JSON
-                val jsonInputString = "{\"key\": \"$key\", \"device_id\": \"android_device\"}"
+                val jsonInputString = "{\"key\": \"$key\", \"device_id\": \"$deviceId\"}"
                 
                 connection.outputStream.use { os: OutputStream ->
                     val input = jsonInputString.toByteArray(Charsets.UTF_8)
@@ -48,23 +51,17 @@ class MenuService : Service() {
                 }
 
                 val responseCode = connection.responseCode
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val response = connection.inputStream.bufferedReader().use { it.readText() }
-                    
-                    // Checking if response contains "valid": true
-                    if (response.contains("\"valid\": true")) {
-                        showToast("Accepted")
-                        System.loadLibrary("LOL")
-                    } else {
-                        showToast("Invalid Key")
-                        stopSelf()
-                    }
+                val response = connection.inputStream.bufferedReader().use { it.readText() }
+                
+                if (responseCode == HttpURLConnection.HTTP_OK && response.contains("\"valid\": true")) {
+                    showToast("Accepted")
+                    System.loadLibrary("LOL")
                 } else {
-                    showToast("Server Error: $responseCode")
+                    showToast("Rejected: $response")
                     stopSelf()
                 }
             } catch (e: Exception) {
-                showToast("Connection Error: " + e.toString())
+                showToast("Error: " + e.toString())
                 stopSelf()
             }
         }.start()
