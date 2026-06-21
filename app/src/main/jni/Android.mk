@@ -1,5 +1,4 @@
 LOCAL_PATH := $(call my-dir)
-MAIN_LOCAL_PATH := $(call my-dir)
 
 # ============================================================================#
 include $(CLEAR_VARS)
@@ -26,18 +25,24 @@ LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Dobby
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/ImGui
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/KittyMemory
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Unity
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/And64InlineHook
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/Substrate
 
-FILE_LIST               := $(wildcard $(LOCAL_PATH)/imgui/*.c*)
-FILE_LIST               += $(wildcard $(LOCAL_PATH)/xdl/*.c*)
-FILE_LIST               += $(wildcard $(LOCAL_PATH)/KittyMemory/*.c*)
+# Manually including ImGui sources to ensure proper linking
+FILE_LIST              := ImGui/imgui.cpp
+FILE_LIST              += ImGui/imgui_draw.cpp
+FILE_LIST              += ImGui/imgui_widgets.cpp
+FILE_LIST              += ImGui/imgui_tables.cpp
+FILE_LIST              += ImGui/imgui_impl_android.cpp
+FILE_LIST              += ImGui/imgui_impl_opengl3.cpp
+
+# Adding other sources
+FILE_LIST              += $(wildcard $(LOCAL_PATH)/xdl/*.c*)
+FILE_LIST              += $(wildcard $(LOCAL_PATH)/KittyMemory/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/IL2CppSDKGenerator/*.c*)
-FILE_LIST              += $(wildcard $(LOCAL_PATH)/*.c*)
+FILE_LIST              += $(wildcard $(LOCAL_PATH)/*.cpp)
 
 LOCAL_SRC_FILES        := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 
-
+# Architecture specific hooks
 ifeq ($(TARGET_ARCH_ABI), arm64-v8a)
     LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/And64InlineHook
     HOOK_SRC := $(wildcard $(LOCAL_PATH)/include/And64InlineHook/*.c*)
@@ -48,12 +53,7 @@ else ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
     LOCAL_SRC_FILES += $(HOOK_SRC:$(LOCAL_PATH)/%=%)
 endif
 
-
-
-
 LOCAL_STATIC_LIBRARIES := libdobby
 LOCAL_CPP_FEATURES     := exceptions
 
 include $(BUILD_SHARED_LIBRARY)
-# ============================================================================
-
