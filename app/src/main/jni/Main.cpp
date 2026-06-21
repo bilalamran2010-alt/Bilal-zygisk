@@ -15,6 +15,7 @@
 #include "fonts/FontAwesome6_solid.h"
 #include "ImGui/Toggle.h"
 #include "ImGui/Theme.h"
+
 Config cfg; 
 GetTouch_t old_GetTouch = nullptr;
 bool HasOriginalPos = false;
@@ -44,9 +45,7 @@ static ImVec2 tapPos(50, 50);
 static int MenuTab = 0;
 
 void hack_thread() {
-
     pid_t pid = getpid();
-
     do {
         il2cpp_base = get_module_base(pid, "libil2cpp.so");
         sleep(7);
@@ -72,8 +71,7 @@ void hack_thread() {
     }
 }
 
-bool ToggleSwitch(const char* id, bool* v)
-{
+bool ToggleSwitch(const char* id, bool* v) {
     ImVec2 p = ImGui::GetCursorScreenPos();
     ImDrawList* draw = ImGui::GetWindowDrawList();
     float height = ImGui::GetFrameHeight();
@@ -98,36 +96,27 @@ bool ToggleSwitch(const char* id, bool* v)
     return true;
 }
 
-
-
-bool ToggleSwitchFloat(const char* id, bool* v)
-{
-// MCHI NIK MOK HAHAHAHH
+bool ToggleSwitchFloat(const char* id, bool* v) {
+    return false;
 }
 
-UnityEngine_Touch_Fields hook_GetTouch(int index)
-{
-    if (BlockUnityTouch)
-    {
+UnityEngine_Touch_Fields hook_GetTouch(int index) {
+    if (BlockUnityTouch) {
         UnityEngine_Touch_Fields fake{};
         fake.m_Phase = TouchPhase::Canceled;
         return fake;
     }
-
     return *(UnityEngine_Touch_Fields*)old_GetTouch(index);
-    
 }
-
-
 
 void *getRealAddr(ulong offset) {
     return reinterpret_cast<void*>(il2cpp_base + offset);
-};
+}
 
 bool clearMousePos = true;
 bool initImGui = false;
-
 inline EGLBoolean (*old_eglSwapBuffers)(EGLDisplay dpy, EGLSurface surface);
+
 inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
     eglQuerySurface(dpy, surface, EGL_WIDTH, &g_GlWidth);
     eglQuerySurface(dpy, surface, EGL_HEIGHT, &g_GlHeight);
@@ -140,83 +129,51 @@ inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
     }
 
     ImGuiIO &io = ImGui::GetIO();
-    if (MenuTheme == 0)
-    SetElegantSkyGlassTheme();
-
-    if (MenuTheme == 1)
-    SetElegantBlackAndRedTheme();
-    
-    if (MenuTheme == 2)
-    SetDripClientTheme();
+    if (MenuTheme == 0) SetElegantSkyGlassTheme();
+    if (MenuTheme == 1) SetElegantBlackAndRedTheme();
+    if (MenuTheme == 2) SetDripClientTheme();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplAndroid_NewFrame(g_GlWidth, g_GlHeight);
     ImGui::NewFrame();
     
-// CALL FUNCTIONS VOID
     if (cfg.aim.enabled && cfg.aim.all) {
-    AimbotRageVoid();
+        AimbotRageVoid();
     }
-    
 
-    
-
-
-
-
-
-// TOUCH CONFIG
-int touchCount = (((int (*)())(Class_Input__get_touchCount))());
-// ===== 4 FINGERS TOGGLE MENU =====
-if (touchCount >= 4)
-{
-    if (!fourFingerPressed)
-    {
-        HideFullMenu = !HideFullMenu;
-        fourFingerPressed = true;
+    int touchCount = (((int (*)())(Class_Input__get_touchCount))());
+    if (touchCount >= 4) {
+        if (!fourFingerPressed) {
+            HideFullMenu = !HideFullMenu;
+            fourFingerPressed = true;
+        }
+    } else {
+        fourFingerPressed = false;
     }
-}
-else
-{
-    fourFingerPressed = false;
-}
 
-if (touchCount > 0) {
-    UnityEngine_Touch_Fields touch = *(UnityEngine_Touch_Fields*)old_GetTouch(0);
-    
+    if (touchCount > 0) {
+        UnityEngine_Touch_Fields touch = *(UnityEngine_Touch_Fields*)old_GetTouch(0);
+        float reverseY = io.DisplaySize.y - touch.m_Position.fields.y;
 
-    float reverseY = io.DisplaySize.y - touch.m_Position.fields.y;
-
-    if (touch.m_Phase == TouchPhase::Began ||
-        touch.m_Phase == TouchPhase::Moved ||
-        touch.m_Phase == TouchPhase::Stationary)
-    {
-        io.MousePos = ImVec2(touch.m_Position.fields.x, reverseY);
-        io.MouseDown[0] = true;
-    }
-    else
-    {
+        if (touch.m_Phase == TouchPhase::Began || touch.m_Phase == TouchPhase::Moved || touch.m_Phase == TouchPhase::Stationary) {
+            io.MousePos = ImVec2(touch.m_Position.fields.x, reverseY);
+            io.MouseDown[0] = true;
+        } else {
+            io.MouseDown[0] = false;
+        }
+    } else {
         io.MouseDown[0] = false;
     }
-}
-else
-{
-    io.MouseDown[0] = false;
-}
 
-// FIX GAME TOUCH
-BlockUnityTouch = io.WantCaptureMouse;
-    
+    BlockUnityTouch = io.WantCaptureMouse;
     DrawSimpleESP(g_GlWidth, g_GlHeight);
+
     if (!HideFullMenu && CloseGui) {
         ImVec2 windowSize(80, 80);
         ImGui::SetNextWindowPos(tapPos, ImGuiCond_Always);
         ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
 
-        ImGui::Begin("##TapToOpen", nullptr,
-            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+        ImGui::Begin("##TapToOpen", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
 
         ImDrawList* draw = ImGui::GetWindowDrawList();
         ImVec2 winPos = ImGui::GetWindowPos();
@@ -234,8 +191,7 @@ BlockUnityTouch = io.WantCaptureMouse;
 
         ImVec2 mousePos = ImGui::GetIO().MousePos;
         if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-            if (mousePos.x >= center.x - radius && mousePos.x <= center.x + radius &&
-                mousePos.y >= center.y - radius && mousePos.y <= center.y + radius) {
+            if (mousePos.x >= center.x - radius && mousePos.x <= center.x + radius && mousePos.y >= center.y - radius && mousePos.y <= center.y + radius) {
                 double now = ImGui::GetTime();
                 if (now - lastTapTime < doubleTapDelay) CloseGui = false;
                 lastTapTime = now;
@@ -279,11 +235,8 @@ BlockUnityTouch = io.WantCaptureMouse;
             ImGui::EndChild();
             ImGui::SameLine();
         }
-    }
-        // ================= RIGHT CONTENT =================
         
-        ImGui::BeginChild("##content", ImVec2(0, 0), true);
-
+            ImGui::BeginChild("##content", ImVec2(0, 0), true);
         if (MenuTab == 0) {
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Enable Functions");
             ImGui::SameLine(220);
@@ -328,7 +281,6 @@ BlockUnityTouch = io.WantCaptureMouse;
             ImGui::Checkbox("ESP Health", &cfg.esp.Health);
             ImGui::Checkbox("HIDE FOV", &HideFov);
         }
-
         if (MenuTab == 2) {
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Enable Functions");
             ImGui::SameLine(220);
@@ -337,7 +289,6 @@ BlockUnityTouch = io.WantCaptureMouse;
             ImGui::Text(ICON_FA_BOLT "  MEMORY FUNCTIONS");
             ImGui::Separator();
         }
-
         if (MenuTab == 3) {
             ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Enable Functions");
             ImGui::SameLine(220);
@@ -347,7 +298,6 @@ BlockUnityTouch = io.WantCaptureMouse;
             ImGui::Separator();
             ImGui::Text("Aim:");
         }
-
         if (MenuTab == 4) {
             ImGui::Text(ICON_FA_EDIT "  CONFIG MENU");
             ImGui::Separator();
@@ -368,33 +318,30 @@ BlockUnityTouch = io.WantCaptureMouse;
             ImGui::Text("Menu Settings:");
             ImGui::Checkbox("Hide Menu", &HideFullMenu);
         }
-
         if (MenuTab == 5) {
             ImGui::Text(ICON_FA_INFO "  PANEL INFO");
             ImGui::Separator();
             ImGui::TextColored(ImVec4(0.2f, 1.0f, 0.6f, 1), ICON_FA_CHECK "  Modded by LOL");
             ImGui::TextColored(ImVec4(0.0f, 0.7f, 1.0f, 1), ICON_FA_TELEGRAM "  LOLXCheat");
         }
-    ImGui::EndChild(); // End of ##content
-    } // End of if(ImGui::Begin(...))
-    ImGui::End();
+        ImGui::EndChild();
+    } 
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
     return old_eglSwapBuffers(dpy, surface);
 }
 
 inline void StartGUI() {
     void *ptr_eglSwapBuffer = DobbySymbolResolver("/system/lib/libEGL.so", "eglSwapBuffers");
     if (ptr_eglSwapBuffer != nullptr) {
-        DobbyHook((void *)ptr_eglSwapBuffer, (void *)hooked_eglSwapBuffers, (void **)&old_eglSwapBuffers);
+        DobbyHook((void *)ptr_eglSwapBuffer, (void *)hook_eglSwapBuffers, (void **)&old_eglSwapBuffers);
         LOGD("GUI started successfully");
     }
 }
 
-{
+void StartHacks() {
     pid_t pid = getpid();
-
     do {
         il2cpp_base = get_module_base(pid, "libil2cpp.so");
         sleep(7);
@@ -420,6 +367,7 @@ inline void StartGUI() {
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     jvm = vm;
-    std::thread(hack_thread).detach();
+    std::thread(StartHacks).detach();
     return JNI_VERSION_1_6;
 }
+
