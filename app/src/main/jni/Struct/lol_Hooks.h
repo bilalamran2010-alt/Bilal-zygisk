@@ -377,7 +377,9 @@ inline void DrawSimpleESP(float screenWidth, float screenHeight)
 
     // ============= CORNER BOX ============
 if (cfg.esp.Box)
-{
+{ImDrawList* draw = ImGui::GetBackgroundDrawList();
+if (!draw) return;
+
     ImU32 boxColor = get_IsDieing(safeEnemy) ?
         IM_COL32(255, 0, 0, 200) :
         ImGui::ColorConvertFloat4ToU32(EspBoxColor);
@@ -404,7 +406,7 @@ if (cfg.esp.Box)
 }
 
     // ============= NEW BOX ============
-if (NewBox)
+if (cfg.esp.box)
 {
     ImVec4 color = EspBoxColor;
     color.w = 0.30f;
