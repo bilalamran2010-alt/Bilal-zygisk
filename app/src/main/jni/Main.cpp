@@ -377,18 +377,17 @@ BlockUnityTouch = io.WantCaptureMouse;
         }
     ImGui::EndChild(); // End of ##content
     } // End of if(ImGui::Begin(...))
-    ImGui::End(); // End of LOL X Cheat window
- // End of else if (!HideFullMenu)
+    ImGui::End();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-ImGui::Render();
-ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-return old_eglSwapBuffers(dpy, surface);
+    return old_eglSwapBuffers(dpy, surface);
 }
 
 inline void StartGUI() {
     void *ptr_eglSwapBuffer = DobbySymbolResolver("/system/lib/libEGL.so", "eglSwapBuffers");
     if (ptr_eglSwapBuffer != nullptr) {
-        DobbyHook((void *)ptr_eglSwapBuffer, (void *)hook_eglSwapBuffers, (void **)&old_eglSwapBuffers);
+        DobbyHook((void *)ptr_eglSwapBuffer, (void *)hooked_eglSwapBuffers, (void **)&old_eglSwapBuffers);
         LOGD("GUI started successfully");
     }
 }
