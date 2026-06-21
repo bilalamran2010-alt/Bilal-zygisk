@@ -182,7 +182,8 @@ else
 }
 
 if (touchCount > 0) {
-    UnityEngine_Touch_Fields touch = old_GetTouch(0);
+    UnityEngine_Touch_Fields touch = *(UnityEngine_Touch_Fields*)old_GetTouch(0);
+    
 
     float reverseY = io.DisplaySize.y - touch.m_Position.fields.y;
 

@@ -21,6 +21,7 @@ struct Config {
         bool box;
         bool line;
         bool Health;
+        bool enabledRgb;
     } esp;
 };
 
