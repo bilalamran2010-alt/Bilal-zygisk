@@ -5,10 +5,10 @@
 #include "Gui.hpp"
 
 extern Config cfg;
-extern GetTouch_t old_GetTouch;
 extern bool HasOriginalPos;
 extern bool fourFingerPressed;
 extern bool HideFullMenu;
 extern bool NewBox;
+extern GetTouch_t old_GetTouch;
 
 #endif
