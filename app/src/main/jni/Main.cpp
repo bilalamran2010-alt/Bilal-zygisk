@@ -12,7 +12,7 @@
 #include "Struct/Gui.hpp"
 #include "fonts/FontAwesome6_solid.h"
 #include "ImGui/Toggle.h"
-#include "imgui/Theme.h"
+#include "ImGui/Theme.h"
 
 Config cfg;
 

@@ -14,7 +14,7 @@ struct Config {
         bool enabled;
         bool box;
         bool line;
-        bool health;
+        bool Health;
     } esp;
 };
 
