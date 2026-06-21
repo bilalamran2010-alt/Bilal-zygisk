@@ -27,7 +27,6 @@ bool IsValidPackage() {
     return cmdline == "com.dts.freefiremax";
 }
 
-
 Config cfg; 
 GetTouch_t old_GetTouch = nullptr;
 bool HasOriginalPos = false;
