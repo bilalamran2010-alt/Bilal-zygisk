@@ -11,7 +11,7 @@ import java.net.URL
 
 class MenuService : Service() {
 
-    private val SERVER_URL = "https://bilal828.pythonanywhere.com/verify/check_key?key="
+    private val SERVER_URL = "https://bilal828.pythonanywhere.com/verify?key="
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -21,7 +21,7 @@ class MenuService : Service() {
         if (userKey.isNotEmpty()) {
             verifyKey(userKey)
         } else {
-            showToast("Please enter a key")
+            showToast("Enter a key")
             stopSelf()
         }
         return START_STICKY
@@ -33,19 +33,25 @@ class MenuService : Service() {
                 val url = URL(SERVER_URL + key)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
-                connection.connectTimeout = 5000
+                connection.connectTimeout = 10000
 
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
-
-                if (response.trim() == "true") {
-                    showToast("Key Accepted!")
-                    System.loadLibrary("LOL")
+                val responseCode = connection.responseCode
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    val response = connection.inputStream.bufferedReader().use { it.readText() }.trim()
+                    
+                    if (response == "true") {
+                        showToast("Accepted")
+                        System.loadLibrary("LOL")
+                    } else {
+                        showToast("Invalid Key")
+                        stopSelf()
+                    }
                 } else {
-                    showToast("Invalid Key!")
+                    showToast("Server Error: $responseCode")
                     stopSelf()
                 }
             } catch (e: Exception) {
-                showToast("Connection Error: " + e.message)
+                showToast("Connection Error: " + e.toString())
                 stopSelf()
             }
         }.start()
