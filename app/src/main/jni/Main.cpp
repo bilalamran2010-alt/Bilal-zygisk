@@ -17,6 +17,11 @@
 uintptr_t il2cpp_base = 0;
 uintptr_t unity_base = 0;
 
+bool HasOriginalPos = false;
+bool fourFingerPressed = false;
+bool HideFullMenu = false;
+bool NewBox = false;
+
 #define ATTACH_JNI(env)                     \
     JNIEnv* env = nullptr;                 \
     bool attached = false;                 \
@@ -37,7 +42,6 @@ static ImVec2 tapPos(50, 50);
 static int MenuTab = 0;
 
 void hack_thread() {
-    zygisk::Init();
 
     pid_t pid = getpid();
 
