@@ -1,3 +1,4 @@
+typedef UnityEngine_Touch_Fields (*GetTouch_t)(int index);
 #ifndef MAIN_H
 #define MAIN_H
 

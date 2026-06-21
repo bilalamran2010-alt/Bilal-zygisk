@@ -274,7 +274,7 @@ inline void DrawSimpleESP(float screenWidth, float screenHeight)
     if (count > 100)
         count = 100;
     
- //   DrawEnemiesCount(screenWidth);
+    DrawEnemiesCount(screenWidth);
     
     auto values = players->getValues();
     if (!values) return;
@@ -432,8 +432,8 @@ void AimbotRageVoid()
     if (localPlayer != lastLocal)
     {
         CachedEnemy = nullptr;
-     //   LockedEnemy = nullptr;
-     //   IsEnemyLocked = false;
+        LockedEnemy = nullptr;
+        IsEnemyLocked = false;
         HasOriginalPos = false;
         lastLocal = localPlayer;
     }
@@ -490,8 +490,8 @@ void AimbotLegitVoid()
     if (localPlayer != lastLocal)
     {
         CachedEnemy = nullptr;
-       // LockedEnemy = nullptr;
-       // IsEnemyLocked = false;
+        LockedEnemy = nullptr;
+        IsEnemyLocked = false;
         HasOriginalPos = false;
         lastLocal = localPlayer;
     }
