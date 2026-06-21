@@ -30,7 +30,6 @@ class MenuService : Service() {
     }
 
     private fun verifyKey(key: String) {
-        // Get Unique Device ID
         val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         
         Thread {
@@ -53,7 +52,7 @@ class MenuService : Service() {
                 val responseCode = connection.responseCode
                 val response = connection.inputStream.bufferedReader().use { it.readText() }
                 
-                if (responseCode == HttpURLConnection.HTTP_OK && response.contains("\"valid\": true")) {
+                if (responseCode == HttpURLConnection.HTTP_OK && (response.contains("\"valid\":true") || response.contains("\"valid\": true"))) {
                     showToast("Accepted")
                     System.loadLibrary("LOL")
                 } else {
