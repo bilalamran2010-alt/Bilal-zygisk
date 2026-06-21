@@ -620,3 +620,12 @@ int BLAGCMCGEJG1(void *ist, HitObjectInfo *HitObject) {
     }
     return old_BLAGCMCGEJG1(ist, HitObject);
 }
+void InitPatches() {
+
+}
+
+int old_GetTouch = 0;
+
+int hook_GetTouch(void* instance, int fingerId) {
+    return 0;
+}
