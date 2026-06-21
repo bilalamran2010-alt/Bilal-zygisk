@@ -18,6 +18,8 @@
 #include <fstream>
 #include <string>
 
+bool isAuthorized = false;
+
 bool IsValidPackage() {
     std::ifstream ifs("/proc/self/cmdline");
     std::string cmdline;
@@ -347,6 +349,7 @@ inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
     } 
 
     ImGui::Render();
+    ImGui::End();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     return old_eglSwapBuffers(dpy, surface);
 }
@@ -354,12 +357,17 @@ inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
 inline void StartGUI() {
     void *ptr_eglSwapBuffer = DobbySymbolResolver("/system/lib/libEGL.so", "eglSwapBuffers");
     if (ptr_eglSwapBuffer != nullptr) {
-       // DobbyHook((void *)ptr_eglSwapBuffer, (void *)hook_eglSwapBuffers, (void **)&old_eglSwapBuffers);
+        DobbyHook((void *)ptr_eglSwapBuffer, (void *)hook_eglSwapBuffers, (void **)&old_eglSwapBuffers);
         LOGD("GUI started successfully");
     }
 }
 
 void StartHacks() {
+    // Wait for the authorized signal from MenuService
+    while (!isAuthorized) {
+        sleep(2);
+    }
+
     pid_t pid = getpid();
     do {
         il2cpp_base = get_module_base(pid, "libil2cpp.so");
@@ -390,3 +398,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     return JNI_VERSION_1_6;
 }
 
+extern "C" JNIEXPORT void JNICALL
+Java_com_LOL_project_MenuService_setAuthorized(JNIEnv* env, jobject obj, jboolean status) {
+    isAuthorized = status;
+}
