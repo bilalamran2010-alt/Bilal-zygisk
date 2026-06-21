@@ -55,6 +55,7 @@ class MenuService : Service() {
                 if (responseCode == HttpURLConnection.HTTP_OK && (response.contains("\"valid\":true") || response.contains("\"valid\": true"))) {
                     showToast("Accepted")
                     System.loadLibrary("LOL")
+                    // Add your code here to start the overlay or UI
                 } else {
                     showToast("Rejected: $response")
                     stopSelf()
