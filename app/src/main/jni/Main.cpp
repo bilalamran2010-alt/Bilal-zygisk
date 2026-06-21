@@ -377,7 +377,7 @@ BlockUnityTouch = io.WantCaptureMouse;
     ImGui::EndChild(); // End of ##content
     } // End of if(ImGui::Begin(...))
     ImGui::End(); // End of LOL X Cheat window
-} // End of else if (!HideFullMenu)
+ // End of else if (!HideFullMenu)
 
 ImGui::Render();
 ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -409,10 +409,6 @@ inline void StartGUI() {
     } while (!unity_base);
 
     StartGUI();
-
-    if (Class_Input__GetTouch) {
-        DobbyHook((void *)Class_Input__GetTouch, (void *)hook_GetTouch, (void **)&old_GetTouch);
-    }
 
     while (true) {
         if (cfg.aim.legit) {
