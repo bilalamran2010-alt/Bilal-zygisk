@@ -18,6 +18,8 @@
 #include <fstream>
 #include <string>
 
+bool isAuthorized = false; 
+
 bool IsValidPackage() {
     std::ifstream ifs("/proc/self/cmdline");
     std::string cmdline;
