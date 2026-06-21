@@ -11,7 +11,7 @@ import java.net.URL
 
 class MenuService : Service() {
 
-    private val SERVER_URL = "http://YOUR_FLASK_SERVER_URL/check_key?key="
+    private val SERVER_URL = "https://bilal828.pythonanywhere.com/verify/check_key?key="
 
     override fun onBind(intent: Intent?): IBinder? = null
 
