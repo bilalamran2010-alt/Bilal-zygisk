@@ -10,11 +10,12 @@
 #include "Struct/Zygisk.hpp"
 #include "Struct/main.h"
 #include "Struct/Gui.hpp"
+#include "Struct/lol_Hooks.h"
 #include "fonts/FontAwesome6_solid.h"
 #include "ImGui/Toggle.h"
 #include "ImGui/Theme.h"
-
-Config cfg;
+uintptr_t il2cpp_base = 0;
+uintptr_t unity_base = 0;
 
 #define ATTACH_JNI(env)                     \
     JNIEnv* env = nullptr;                 \
@@ -36,7 +37,7 @@ static ImVec2 tapPos(50, 50);
 static int MenuTab = 0;
 
 void hack_thread() {
-    Zygisk::Init();
+    zygisk::Init();
 
     pid_t pid = getpid();
 

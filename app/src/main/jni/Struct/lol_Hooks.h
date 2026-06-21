@@ -521,7 +521,7 @@ struct DamageInfo2_o {
     uint8_t ACAKHEABPEJ;
     bool MJIHLDJNHLF;
     int32_t LOKIMAEAPCB;
-    monoDictionary<uint8, void **> *FHLFLAHCIBN;
+    monoDictionary<uint8_t, void **> *FHLFLAHCIBN;
 };
 
 struct PlayerID {
