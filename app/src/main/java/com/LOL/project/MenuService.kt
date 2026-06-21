@@ -54,8 +54,16 @@ class MenuService : Service() {
                 
                 if (responseCode == HttpURLConnection.HTTP_OK && (response.contains("\"valid\":true") || response.contains("\"valid\": true"))) {
                     showToast("Accepted")
+                    
+                    // --- IMPORTANT ---
+                    // Add the code to show your floating menu or start the mod here
+                    // System.loadLibrary("LOL") is called below
                     System.loadLibrary("LOL")
-                    // Add your code here to start the overlay or UI
+                    
+                    // If you have a FloatingMenu service, call it here:
+                    // val intent = Intent(this, FloatingMenu::class.java)
+                    // startService(intent)
+                    
                 } else {
                     showToast("Rejected: $response")
                     stopSelf()
