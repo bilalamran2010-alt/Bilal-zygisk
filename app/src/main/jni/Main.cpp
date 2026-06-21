@@ -22,6 +22,9 @@ bool fourFingerPressed = false;
 bool HideFullMenu = false;
 bool NewBox = false;
 
+typedef UnityEngine_Touch_Fields (*GetTouch_t)(int index);
+GetTouch_t old_GetTouch = nullptr;
+
 #define ATTACH_JNI(env)                     \
     JNIEnv* env = nullptr;                 \
     bool attached = false;                 \
@@ -102,8 +105,6 @@ bool ToggleSwitchFloat(const char* id, bool* v)
 {
 // MCHI NIK MOK HAHAHAHH
 }
-
-UnityEngine_Touch_Fields (*old_GetTouch)(int index);
 
 UnityEngine_Touch_Fields hook_GetTouch(int index)
 {
@@ -323,7 +324,7 @@ BlockUnityTouch = io.WantCaptureMouse;
             ImGui::Checkbox("ESP Box", &cfg.esp.box);
             ImGui::SameLine();
             ImGui::Checkbox("ESP FullBox", &NewBox);
-            ImGui::Checkbox("ESP Health", &cfg.esp.health);
+            ImGui::Checkbox("ESP Health", &cfg.esp.Health);
             ImGui::Checkbox("HIDE FOV", &HideFov);
         }
 

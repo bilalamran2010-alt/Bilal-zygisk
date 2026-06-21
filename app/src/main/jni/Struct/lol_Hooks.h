@@ -624,7 +624,7 @@ void InitPatches() {
 
 }
 
-int old_GetTouch = 0;
+extern GetTouch_t old_GetTouch;
 
 int hook_GetTouch(void* instance, int fingerId) {
     return 0;
