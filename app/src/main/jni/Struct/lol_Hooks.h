@@ -1,6 +1,4 @@
 #pragma once
-#include "main.h"
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -24,6 +22,14 @@ inline static int g_GlHeight, g_GlWidth;
 #include <mutex>
 #include <string>
 #include <KittyMemory/MemoryPatch.h>
+#include "main.h"
+
+extern Config cfg;
+extern bool HasOriginalPos;
+extern bool fourFingerPressed;
+extern bool HideFullMenu;
+extern bool NewBox;
+extern GetTouch_t old_GetTouch;
 
 int SilentTarget = 0;
 const char* SilentPos[] = { "Head", "Hip" };
