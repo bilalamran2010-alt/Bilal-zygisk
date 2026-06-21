@@ -17,6 +17,7 @@
 uintptr_t il2cpp_base = 0;
 uintptr_t unity_base = 0;
 
+Config cfg;
 bool HasOriginalPos = false;
 bool fourFingerPressed = false;
 bool HideFullMenu = false;

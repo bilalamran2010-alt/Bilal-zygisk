@@ -1,4 +1,6 @@
 #pragma once
+extern Config cfg;
+extern bool HasOriginalPos;
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -11,7 +13,6 @@
 #include <Tools.h>
 #include <Vector3.hpp>
 #include <Color.h>
-#include <Struct/main.h>
 #include "obfuscate.h"
 #include "Unity/unity.h"
 #include "Class.h"
