@@ -1,7 +1,9 @@
-typedef UnityEngine_Touch_Fields (*GetTouch_t)(int index);
-#include "Gui.hpp"
 #ifndef MAIN_H
 #define MAIN_H
+
+#include "Gui.hpp"
+
+typedef UnityEngine_Touch_Fields (*GetTouch_t)(int index);
 
 extern bool HasOriginalPos;
 extern bool fourFingerPressed;
@@ -26,6 +28,6 @@ struct Config {
     } esp;
 };
 
-inline Config cfg; 
+inline Config cfg;
 
 #endif

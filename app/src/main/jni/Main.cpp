@@ -112,7 +112,8 @@ UnityEngine_Touch_Fields hook_GetTouch(int index)
         return fake;
     }
 
-    return old_GetTouch(index);
+    return *(UnityEngine_Touch_Fields*)old_GetTouch(index);
+    
 }
 
 
