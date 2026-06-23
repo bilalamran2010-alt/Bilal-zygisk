@@ -17,8 +17,12 @@
 #include "ImGui/Theme.h"
 #include <fstream>
 #include <string>
+#include <curl/curl.h>
+#include "Includes/obfuscate.h"
+#include "Tools.h"
 
 bool isAuthorized = false; 
+JavaVM* jvm = nullptr;
 
 bool IsValidPackage() {
     std::ifstream ifs("/proc/self/cmdline");
@@ -56,41 +60,6 @@ static bool HideGui = false;
 bool BlockUnityTouch = false;
 static ImVec2 tapPos(50, 50);
 static int MenuTab = 0;
-
-void *hack_thread(void *) {
-    sleep(10);
-
-    if (!IsValidPackage()) {
-        return nullptr;
-    }
-
-    pid_t pid = getpid();
-    
-    do {
-        il2cpp_base = get_module_base(pid, "libil2cpp.so");
-        sleep(1);
-    } while (il2cpp_base == 0);
-
-    do {
-        unity_base = get_module_base(pid, "libunity.so");
-        sleep(1);
-    } while (unity_base == 0);
-
-    Il2CppAttach();
-    InitPatches();
-
-    if (Class_Input__GetTouch != 0) {
-        DobbyHook((void *)Class_Input__GetTouch, (void *)hook_GetTouch, (void **)&old_GetTouch);
-    }
-
-    while (true) {
-        if (cfg.aim.legit) {
-            AimbotLegitVoid();
-        }
-        usleep(1000);
-    }
-    return nullptr;
-}
 
 bool ToggleSwitch(const char* id, bool* v) {
     ImVec2 p = ImGui::GetCursorScreenPos();
@@ -195,8 +164,8 @@ inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
         ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
 
         ImGui::Begin("##TapToOpen", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
-
-        ImDrawList* draw = ImGui::GetWindowDrawList();
+        
+                ImDrawList* draw = ImGui::GetWindowDrawList();
         ImVec2 winPos = ImGui::GetWindowPos();
         float margin = 6.0f;
         float radius = (windowSize.x * 0.5f) - margin;
@@ -268,7 +237,8 @@ inline EGLBoolean hook_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface) {
             ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), " AIMBOT");
             ImGui::SameLine(130);
             ToggleSwitch("##EnableAim", &cfg.aim.enabled);
-            ImGui::Text("Aimbot Type:");
+            
+                        ImGui::Text("Aimbot Type:");
             ImGui::Checkbox("Aimbot Rage", &cfg.aim.rage);
             ImGui::SameLine();
             ImGui::Checkbox("Aimbot Legit", &cfg.aim.legit);
@@ -362,45 +332,65 @@ inline void StartGUI() {
     }
 }
 
-void StartHacks() {
-    // Wait for the authorized signal from MenuService
-    while (!isAuthorized) {
-        sleep(2);
+// Updated Verification Logic for JSON Server
+#include "nlohmann/json.hpp" // Make sure to include your JSON library
+using json = nlohmann::json;
+
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* s) {
+    s->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+bool CheckServer(const char* key, const char* device_id) {
+    CURL* curl = curl_easy_init();
+    if (!curl) return false;
+    std::string readBuffer;
+    
+    json j;
+    j["key"] = key;
+    j["device_id"] = device_id;
+    std::string jsonData = j.dump();
+
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+
+    curl_easy_setopt(curl, CURLOPT_URL, "https://bilal828.pythonanywhere.com/verify");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+    
+    CURLcode res = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
+    
+    if (res == CURLE_OK) {
+        auto response = json::parse(readBuffer);
+        return response.value("valid", false);
     }
+    return false;
+}
 
+void StartHacks() {
+    while (!isAuthorized) sleep(2);
     pid_t pid = getpid();
-    do {
-        il2cpp_base = get_module_base(pid, "libil2cpp.so");
-        sleep(7);
-    } while (!il2cpp_base);
-
+    while (!(il2cpp_base = get_module_base(pid, "libil2cpp.so"))) sleep(5);
     Il2CppAttach();
     InitPatches();
-
-    do {
-        unity_base = get_module_base(pid, "libunity.so");
-        sleep(1);
-    } while (!unity_base);
-
+    while (!(unity_base = get_module_base(pid, "libunity.so"))) sleep(1);
     StartGUI();
-
     while (true) {
-        if (cfg.aim.legit) {
-            AimbotLegitVoid();
-        }
+        if (cfg.aim.legit) AimbotLegitVoid();
         usleep(1000);
     }
 }
+
 extern "C" JNIEXPORT void JNICALL
 Java_com_LOL_project_MenuService_verifyKeyNative(JNIEnv* env, jobject obj, jstring key) {
     const char *k = env->GetStringUTFChars(key, 0);
-    
-    if (std::string(k) == "SECRET_KEY_123") {
-        isAuthorized = true;
-    } else {
-        isAuthorized = false;
-    }
-    
+    // You should have a method in your Tools class to get device ID
+    const char *id = Tools::GetDeviceUniqueIdentifier(env, "YOUR_SECRET_SALT"); 
+    isAuthorized = CheckServer(k, id);
     env->ReleaseStringUTFChars(key, k);
 }
 

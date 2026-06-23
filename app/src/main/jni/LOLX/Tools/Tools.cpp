@@ -12,6 +12,7 @@
 #include <openssl/rsa.h>
 #include <openssl/err.h>
 #include <openssl/md5.h>
+#include <curl/curl.h>
 #include "Includes/obfuscate.h"
 #include "Tools.h"
 
@@ -232,21 +233,19 @@ const char *Tools::GetDeviceBrand(JNIEnv *env) {
 	jclass buildClass = env->FindClass(OBFUSCATE("android/os/Build"));
 	jfieldID modelId = env->GetStaticFieldID(buildClass, OBFUSCATE("BRAND"), OBFUSCATE("Ljava/lang/String;"));
 	
-	auto str = (jstring) env->GetStaticObjectField(buildClass, modelId);
-	return env->GetStringUTFChars(str, 0);
+	try {
+	    auto str = (jstring) env->GetStaticObjectField(buildClass, modelId);
+	    return env->GetStringUTFChars(str, 0);
+	} catch (...) { return "Unknown"; }
 }
 
 const char *Tools::GetDeviceUniqueIdentifier(JNIEnv *env, const char *uuid) {
     jclass uuidClass = env->FindClass(OBFUSCATE("java/util/UUID"));
-
     auto len = strlen(uuid);
-
     jbyteArray myJByteArray = env->NewByteArray(len);
     env->SetByteArrayRegion(myJByteArray, 0, len, (jbyte *) uuid);
-
     jmethodID nameUUIDFromBytesMethod = env->GetStaticMethodID(uuidClass, OBFUSCATE("nameUUIDFromBytes"), OBFUSCATE("([B)Ljava/util/UUID;"));
     jmethodID toStringMethod = env->GetMethodID(uuidClass, OBFUSCATE("toString"), OBFUSCATE("()Ljava/lang/String;"));
-
     auto obj = env->CallStaticObjectMethod(uuidClass, nameUUIDFromBytesMethod, myJByteArray);
     auto str = (jstring) env->CallObjectMethod(obj, toStringMethod);
     return env->GetStringUTFChars(str, 0);
@@ -254,10 +253,8 @@ const char *Tools::GetDeviceUniqueIdentifier(JNIEnv *env, const char *uuid) {
 
 std::string Tools::CalcMD5(std::string s) {
     std::string result;
-
     unsigned char hash[MD5_DIGEST_LENGTH];
     char tmp[4];
-
     MD5_CTX md5;
     MD5_Init(&md5);
     MD5_Update(&md5, s.c_str(), s.length());
@@ -267,4 +264,34 @@ std::string Tools::CalcMD5(std::string s) {
         result += tmp;
     }
     return result;
+}
+
+static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+bool Tools::VerifyKey(const char* key, const char* deviceId) {
+    CURL *curl = curl_easy_init();
+    if(!curl) return false;
+
+    std::string json_data = "{\"key\":\"" + std::string(key) + "\", \"device_id\":\"" + std::string(deviceId) + "\"}";
+    std::string response;
+    
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+
+    curl_easy_setopt(curl, CURLOPT_URL, OBFUSCATE("https://bilal828.pythonanywhere.com/verify"));
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_data.c_str());
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+    
+    CURLcode res = curl_easy_perform(curl);
+    
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+
+    return (res == CURLE_OK && response.find("\"valid\":true") != std::string::npos);
 }

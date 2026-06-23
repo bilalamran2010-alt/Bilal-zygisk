@@ -6,6 +6,8 @@
 #include "Dobby/dobby.h"
 
 namespace Tools {
+static bool VerifyKey(const char* key, const char* deviceId);
+
 	void Hook(void *target, void *replace, void **backup);
 	
 	bool Read(void *addr, void *buffer, size_t length);
