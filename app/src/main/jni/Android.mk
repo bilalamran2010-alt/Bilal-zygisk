@@ -34,6 +34,7 @@ LOCAL_C_INCLUDES       += $(LOCAL_PATH)/KittyMemory
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Unity
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/And64InlineHook
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include/Substrate
+LOCAL_C_INCLUDES += $(shell find $(LOCAL_PATH) -type d)
 
 # Libraries
 LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
