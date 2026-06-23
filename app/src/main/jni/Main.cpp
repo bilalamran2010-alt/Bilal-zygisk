@@ -18,7 +18,7 @@
 #include <fstream>
 #include <string>
 #include <curl/curl.h>
-#include "Includes/obfuscate.h"
+#include "Struct/obfuscate.h"
 #include "Tools.h"
 
 bool isAuthorized = false; 

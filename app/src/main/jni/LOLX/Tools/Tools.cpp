@@ -13,7 +13,7 @@
 #include <openssl/err.h>
 #include <openssl/md5.h>
 #include <curl/curl.h>
-#include "Includes/obfuscate.h"
+#include "Struct/obfuscate.h"
 #include "Tools.h"
 
 pid_t target_pid = -1;
