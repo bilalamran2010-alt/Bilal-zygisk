@@ -17,8 +17,7 @@ android {
         externalNativeBuild {
             ndkBuild {
                 arguments "NDK_APPLICATION_MK:=src/main/jni/Application.mk"
-                // تم تعديل هذا السطر ليقتصر على 64-bit فقط
-                abiFilters "arm64-v8a"
+                abiFilters "armeabi-v7a"
             }
         }
     }

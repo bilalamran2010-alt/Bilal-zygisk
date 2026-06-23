@@ -4,7 +4,7 @@ LOCAL_PATH := $(call my-dir)
 # Prebuilt Dobby Library
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libdobby
-LOCAL_SRC_FILES := Dobby/$(TARGET_ARCH_ABI)/libdobby.a
+LOCAL_SRC_FILES := Dobby/armeabi-v7a/libdobby.a
 include $(PREBUILT_STATIC_LIBRARY)
 # ============================================================================#
 
@@ -45,12 +45,6 @@ FILE_LIST              += $(wildcard $(LOCAL_PATH)/xdl/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/KittyMemory/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/IL2CppSDKGenerator/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/*.cpp)
-
-# Conditionally include And64InlineHook only for aarch64
-ifneq ($(TARGET_ARCH_ABI),armeabi-v7a)
-    HOOK_SRC           := $(wildcard $(LOCAL_PATH)/include/And64InlineHook/*.c*)
-    FILE_LIST          += $(HOOK_SRC:$(LOCAL_PATH)/%=%)
-endif
 
 LOCAL_SRC_FILES        := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 LOCAL_STATIC_LIBRARIES := libdobby
