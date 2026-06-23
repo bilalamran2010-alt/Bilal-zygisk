@@ -109,7 +109,7 @@ void SetupImgui() {
 
 
 
-JavaVM *jvm;
+extern JavaVM *jvm;
 JNIEnv *genv;
 
 
