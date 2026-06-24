@@ -37,8 +37,10 @@ LOCAL_C_INCLUDES       += $(DEPS_PATH)/openssl-android-armeabi-v7a/include
 
 # Libraries
 LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
-LOCAL_LDFLAGS          += -L$(DEPS_PATH)/curl-android-armeabi-v7a/lib -lcurl
-LOCAL_LDFLAGS          += -L$(DEPS_PATH)/openssl-android-armeabi-v7a/lib -lssl -lcrypto
+LOCAL_LDFLAGS          += $(DEPS_PATH)/curl-android-armeabi-v7a/lib/libcurl.a
+LOCAL_LDFLAGS          += $(DEPS_PATH)/openssl-android-armeabi-v7a/lib/libssl.a
+LOCAL_LDFLAGS          += $(DEPS_PATH)/openssl-android-armeabi-v7a/lib/libcrypto.a
+LOCAL_LDFLAGS          += -latomic
 
 # Sources
 FILE_LIST              := ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/imgui_impl_android.cpp ImGui/imgui_impl_opengl3.cpp
