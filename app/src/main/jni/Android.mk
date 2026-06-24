@@ -15,17 +15,22 @@ LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunct
 LOCAL_LDFLAGS          := -Wl,--gc-sections,--strip-all -llog
 LOCAL_ARM_MODE         := arm
 
-# المسارات الصحيحة بناءً على الصور التي أرسلتها
 CURL_ROOT              := $(LOCAL_PATH)/LOLX/Tools/curl/curl-android-armeabi-v7a
 SSL_ROOT               := $(LOCAL_PATH)/LOLX/Tools/curl/openssl-android-armeabi-v7a
 
-LOCAL_C_INCLUDES       := $(LOCAL_PATH) $(LOCAL_PATH)/include $(LOCAL_PATH)/include/Substrate $(LOCAL_PATH)/Dobby $(LOCAL_PATH)/ImGui $(LOCAL_PATH)/KittyMemory $(LOCAL_PATH)/Unity $(LOCAL_PATH)/Struct
+LOCAL_C_INCLUDES       := $(LOCAL_PATH)
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/Substrate
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Dobby
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/ImGui
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/KittyMemory
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Unity
+LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Struct
 LOCAL_C_INCLUDES       += $(CURL_ROOT)/include
 LOCAL_C_INCLUDES       += $(SSL_ROOT)/include
 
-LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
+LOCAL_LDLIBS           := -latomic -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
 
-# الربط المباشر للملفات الموجودة في المجلدات التي صورتها
 LOCAL_LDFLAGS          += $(CURL_ROOT)/lib/libcurl.a
 LOCAL_LDFLAGS          += $(SSL_ROOT)/lib/libssl.a
 LOCAL_LDFLAGS          += $(SSL_ROOT)/lib/libcrypto.a
