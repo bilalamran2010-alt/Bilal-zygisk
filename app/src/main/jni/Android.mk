@@ -15,11 +15,9 @@ LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunct
 LOCAL_LDFLAGS          := -Wl,--gc-sections,--strip-all -llog
 LOCAL_ARM_MODE         := arm
 
-# Root for curl and openssl
 DEPS_ROOT              := $(LOCAL_PATH)/LOLX/Tools/curl
+LIBS_PATH              := $(DEPS_ROOT)/curl-android-armeabi-v7a/lib
 
-# Adding the exact parent directories so that #include <curl/curl.h> works
-# and #include <curl/openssl-.../include/openssl/evp.h> works
 LOCAL_C_INCLUDES       := $(LOCAL_PATH)
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/Substrate
@@ -28,11 +26,12 @@ LOCAL_C_INCLUDES       += $(LOCAL_PATH)/ImGui
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/KittyMemory
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Unity
 LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Struct
-LOCAL_C_INCLUDES       += $(DEPS_ROOT)
 LOCAL_C_INCLUDES       += $(DEPS_ROOT)/curl-android-armeabi-v7a/include
 LOCAL_C_INCLUDES       += $(DEPS_ROOT)/openssl-android-armeabi-v7a/include
 
 LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
+LOCAL_LDFLAGS          += -L$(LIBS_PATH)
+LOCAL_LDFLAGS          += -lcurl -lssl -lcrypto
 
 FILE_LIST              := ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/imgui_impl_android.cpp ImGui/imgui_impl_opengl3.cpp
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/xdl/*.c*)
