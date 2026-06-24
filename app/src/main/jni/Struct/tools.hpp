@@ -15,7 +15,7 @@
 typedef unsigned long ulong;
 
 #if defined(__arm__)
-#include <SubstrateHook.h>
+#include <include/Substrate/SubstrateHook.h>
 #elif defined(__aarch64__)
 #include <And64InlineHook.hpp>
 #endif
