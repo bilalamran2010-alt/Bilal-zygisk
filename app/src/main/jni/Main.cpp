@@ -22,7 +22,7 @@
 #include "Tools.h"
 
 bool isAuthorized = false; 
-extern JavaVM* jvm;
+JavaVM* jvm = nullptr;
 
 bool IsValidPackage() {
     std::ifstream ifs("/proc/self/cmdline");
