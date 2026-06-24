@@ -29,7 +29,8 @@ LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Struct
 LOCAL_C_INCLUDES       += $(CURL_ROOT)/include
 LOCAL_C_INCLUDES       += $(SSL_ROOT)/include
 
-LOCAL_LDLIBS           := -latomic -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
+LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
+LOCAL_LDLIBS           += -latomic
 
 LOCAL_LDFLAGS          += $(CURL_ROOT)/lib/libcurl.a
 LOCAL_LDFLAGS          += $(SSL_ROOT)/lib/libssl.a
