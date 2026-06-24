@@ -12,7 +12,7 @@
 #include <openssl/rsa.h>
 #include <openssl/err.h>
 #include <openssl/md5.h>
-#include <curl/curl-android-armeabi-v7a/include/curl/curl.h>
+#include "curl/curl-android-armeabi-v7a/include/curl/curl.h"
 #include "Struct/obfuscate.h"
 #include "Tools.h"
 
