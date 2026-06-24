@@ -10,7 +10,7 @@
 #ifndef HEADER_ENVELOPE_H
 # define HEADER_ENVELOPE_H
 
-# include <openssl/opensslconf.h>
+# include <opensslconf.h>
 # include <openssl/ossl_typ.h>
 # include <openssl/symhacks.h>
 # include <openssl/bio.h>
