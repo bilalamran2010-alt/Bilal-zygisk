@@ -36,16 +36,17 @@ LOCAL_C_INCLUDES       += $(DEPS_PATH)/curl-android-armeabi-v7a/include
 LOCAL_C_INCLUDES       += $(DEPS_PATH)/openssl-android-armeabi-v7a/include
 
 # Libraries
-LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
-LOCAL_LDLIBS           += -L$(DEPS_PATH)/curl-android-armeabi-v7a/lib -lcurl
-LOCAL_LDLIBS           += -L$(DEPS_PATH)/openssl-android-armeabi-v7a/lib -lssl -lcrypto
-LOCAL_LDLIBS += -latomic
+LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
+LOCAL_LDFLAGS          += -L$(DEPS_PATH)/curl-android-armeabi-v7a/lib -lcurl
+LOCAL_LDFLAGS          += -L$(DEPS_PATH)/openssl-android-armeabi-v7a/lib -lssl -lcrypto
 
 # Sources
 FILE_LIST              := ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/imgui_impl_android.cpp ImGui/imgui_impl_opengl3.cpp
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/xdl/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/KittyMemory/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/IL2CppSDKGenerator/*.c*)
+FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/Tools/*.cpp)
+FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/Tools/curl/*.cpp)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/*.cpp)
 
 LOCAL_SRC_FILES        := $(FILE_LIST:$(LOCAL_PATH)/%=%)
