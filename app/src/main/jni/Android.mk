@@ -10,7 +10,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE           := LOL
-LOCAL_CFLAGS           := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -fno-rtti -fno-exceptions -fpermissive
+LOCAL_CFLAGS           := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -fno-rtti -fno-exceptions -fpermissive -DOPENSSL_NO_ASM
 LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -s -std=c++17 -fno-rtti -fno-exceptions -fpermissive
 LOCAL_LDFLAGS          := -Wl,--gc-sections,--strip-all -llog
 LOCAL_ARM_MODE         := arm
@@ -30,8 +30,8 @@ LOCAL_C_INCLUDES       += $(CURL_ROOT)/include
 LOCAL_C_INCLUDES       += $(SSL_ROOT)/include
 
 LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
-LOCAL_LDLIBS           += -latomic
 
+LOCAL_LDFLAGS          += -latomic
 LOCAL_LDFLAGS          += $(CURL_ROOT)/lib/libcurl.a
 LOCAL_LDFLAGS          += $(SSL_ROOT)/lib/libssl.a
 LOCAL_LDFLAGS          += $(SSL_ROOT)/lib/libcrypto.a
