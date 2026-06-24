@@ -12,12 +12,12 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE           := LOL
 
-# Flags and Includes
+# Flags
 LOCAL_CFLAGS           := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w
 LOCAL_CFLAGS           += -fno-rtti -fno-exceptions -fpermissive
 LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -s -std=c++17
 LOCAL_CPPFLAGS         += -Wno-error=c++11-narrowing -fms-extensions -fno-rtti -fno-exceptions -fpermissive
-LOCAL_LDFLAGS          += -Wl,--gc-sections,--strip-all -llog
+LOCAL_LDFLAGS          := -Wl,--gc-sections,--strip-all -llog
 LOCAL_ARM_MODE         := arm
 
 # Dependencies Path
@@ -36,9 +36,9 @@ LOCAL_C_INCLUDES       += $(DEPS_PATH)/curl-android-armeabi-v7a/include
 LOCAL_C_INCLUDES       += $(DEPS_PATH)/openssl-android-armeabi-v7a/include
 
 # Libraries
-LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
+LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz
 LOCAL_LDFLAGS          += -L$(DEPS_PATH)/curl-android-armeabi-v7a/lib -lcurl
-LOCAL_LDFLAGS          += -L$(DEPS_PATH)/openssl-android-armeabi-v7a/lib -lssl -lcrypto
+LOCAL_LDFLAGS          += -L$(DEPS_PATH)/openssl-android-armeabi-v7a/lib -lssl -lcrypto -latomic
 
 # Sources
 FILE_LIST              := ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/imgui_impl_android.cpp ImGui/imgui_impl_opengl3.cpp
