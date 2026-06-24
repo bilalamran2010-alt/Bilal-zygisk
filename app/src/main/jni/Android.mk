@@ -11,44 +11,22 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE           := LOL
-
-# Flags
-LOCAL_CFLAGS           := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w
-LOCAL_CFLAGS           += -fno-rtti -fno-exceptions -fpermissive -D__STDC_NO_ATOMICS__=1
-LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -s -std=c++17
-LOCAL_CPPFLAGS         += -Wno-error=c++11-narrowing -fms-extensions -fno-rtti -fno-exceptions -fpermissive -D__STDC_NO_ATOMICS__=1
-LOCAL_LDFLAGS          := -Wl,--gc-sections,--strip-all -llog -Wl,--no-warn-mismatch
+LOCAL_CFLAGS           := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -fno-rtti -fno-exceptions -fpermissive
+LOCAL_CPPFLAGS         := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -s -std=c++17 -fno-rtti -fno-exceptions -fpermissive
+LOCAL_LDFLAGS          := -Wl,--gc-sections,--strip-all -llog
 LOCAL_ARM_MODE         := arm
 
-# Dependencies Path
 DEPS_PATH              := $(LOCAL_PATH)/LOLX/Tools/curl
 
-# Includes
-LOCAL_C_INCLUDES       := $(LOCAL_PATH)
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/include/Substrate
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Dobby
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/ImGui
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/KittyMemory
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Unity
-LOCAL_C_INCLUDES       += $(LOCAL_PATH)/Struct
-LOCAL_C_INCLUDES       += $(DEPS_PATH)/curl-android-armeabi-v7a/include
-LOCAL_C_INCLUDES       += $(DEPS_PATH)/openssl-android-armeabi-v7a/include
+LOCAL_C_INCLUDES       := $(LOCAL_PATH) $(LOCAL_PATH)/include $(LOCAL_PATH)/Dobby $(LOCAL_PATH)/ImGui $(LOCAL_PATH)/KittyMemory $(LOCAL_PATH)/Unity $(LOCAL_PATH)/Struct
 
-# Libraries
 LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
-LOCAL_LDFLAGS          += $(DEPS_PATH)/curl-android-armeabi-v7a/lib/libcurl.a
-LOCAL_LDFLAGS          += $(DEPS_PATH)/openssl-android-armeabi-v7a/lib/libssl.a
-LOCAL_LDFLAGS          += $(DEPS_PATH)/openssl-android-armeabi-v7a/lib/libcrypto.a
-LOCAL_LDFLAGS          += -latomic
 
-# Sources
 FILE_LIST              := ImGui/imgui.cpp ImGui/imgui_draw.cpp ImGui/imgui_widgets.cpp ImGui/imgui_tables.cpp ImGui/imgui_impl_android.cpp ImGui/imgui_impl_opengl3.cpp
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/xdl/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/KittyMemory/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/IL2CppSDKGenerator/*.c*)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/Tools/*.cpp)
-FILE_LIST              += $(wildcard $(LOCAL_PATH)/LOLX/Tools/curl/*.cpp)
 FILE_LIST              += $(wildcard $(LOCAL_PATH)/*.cpp)
 
 LOCAL_SRC_FILES        := $(FILE_LIST:$(LOCAL_PATH)/%=%)
