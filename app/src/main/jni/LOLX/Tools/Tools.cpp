@@ -281,7 +281,8 @@ bool Tools::VerifyKey(const char* key, const char* deviceId) {
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
 
-    curl_easy_setopt(curl, CURLOPT_URL, OBFUSCATE("https://bilal828.pythonanywhere.com/verify"));
+    auto obfuscated_url = OBFUSCATE("https://bilal828.pythonanywhere.com/verify");
+curl_easy_setopt(curl, CURLOPT_URL, (char*)obfuscated_url);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_data.c_str());
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
