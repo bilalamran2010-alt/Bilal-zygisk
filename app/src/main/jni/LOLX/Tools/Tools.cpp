@@ -7,7 +7,7 @@
 #include <jni.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <openssl-android-armeabi-v7a/include/openssl/evp.h/>
+#include <curl/openssl-android-armeabi-v7a/include/openssl/evp.h>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
 #include <openssl/err.h>
