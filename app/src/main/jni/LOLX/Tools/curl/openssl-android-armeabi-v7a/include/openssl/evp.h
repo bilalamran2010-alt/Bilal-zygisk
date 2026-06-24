@@ -10,10 +10,10 @@
 #ifndef HEADER_ENVELOPE_H
 # define HEADER_ENVELOPE_H
 
-# include <opensslconf.h>
-# include <ossl_typ.h>
-# include <symhacks.h>
-# include <bio.h>
+# include "opensslconf.h"
+# include "ossl_typ.h"
+# include "symhacks.h"
+# include "bio.h"
 
 # define EVP_MAX_MD_SIZE                 64/* longest known is SHA512 */
 # define EVP_MAX_KEY_LENGTH              64
