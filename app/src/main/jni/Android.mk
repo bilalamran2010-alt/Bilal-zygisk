@@ -19,6 +19,8 @@ LOCAL_ARM_MODE         := arm
 DEPS_PATH              := $(LOCAL_PATH)/LOLX/Tools/curl
 
 LOCAL_C_INCLUDES       := $(LOCAL_PATH) $(LOCAL_PATH)/include $(LOCAL_PATH)/Dobby $(LOCAL_PATH)/ImGui $(LOCAL_PATH)/KittyMemory $(LOCAL_PATH)/Unity $(LOCAL_PATH)/Struct
+LOCAL_C_INCLUDES       += $(DEPS_PATH)/curl-android-armeabi-v7a/include
+LOCAL_C_INCLUDES       += $(DEPS_PATH)/openssl-android-armeabi-v7a/include
 
 LOCAL_LDLIBS           := -llog -landroid -lEGL -lGLESv3 -lGLESv2 -lGLESv1_CM -lz -latomic
 
