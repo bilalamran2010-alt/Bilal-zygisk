@@ -29,3 +29,4 @@ namespace Tools {
 	const char *GetDeviceBrand(JNIEnv *env);
 	const char *GetDeviceUniqueIdentifier(JNIEnv *env, const char *uuid);
 }
+
