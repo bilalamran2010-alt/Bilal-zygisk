@@ -17,7 +17,7 @@ typedef unsigned long ulong;
 #if defined(__arm__)
 #include <include/Substrate/SubstrateHook.h>
 #elif defined(__aarch64__)
-#include <And64InlineHook.hpp>
+#include "include/And64InlineHook/And64InlineHook.hpp"
 #endif
 
 #define LOG_TAG "Aneko"
