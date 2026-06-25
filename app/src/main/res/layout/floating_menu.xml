@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#AA000000"
-    android:padding="10dp">
+    android:background="#E6000000"
+    android:padding="16dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LOL MOD MENU"
-        android:textColor="#FFFFFF" />
-
-    <Switch
-        android:id="@+id/switch_aimbot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aimbot"
-        android:textColor="#FFFFFF" />
-        
+        android:text="LOL MOD MENU"
+        android:textColor="#FFD700"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"/>
+
+    <Switch android:id="@+id/aimbot_head" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Aimbot (Head)" android:textColor="#FFFFFF" />
+    <Switch android:id="@+id/aimbot_body" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Aimbot (Body)" android:textColor="#FFFFFF" />
+    <Switch android:id="@+id/silent_aim" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Silent Aim" android:textColor="#FFFFFF" />
+    
+    <Switch android:id="@+id/esp_line" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ESP Line" android:textColor="#FFFFFF" />
+    <Switch android:id="@+id/esp_box" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ESP Box" android:textColor="#FFFFFF" />
+    <Switch android:id="@+id/esp_health" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ESP Health" android:textColor="#FFFFFF" />
+
     <Button
         android:id="@+id/btn_close"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CLOSE" />
+        android:text="CLOSE"
+        android:layout_marginTop="10dp"/>
 </LinearLayout>
