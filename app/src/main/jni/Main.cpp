@@ -17,7 +17,6 @@
 #include "ImGui/Theme.h"
 #include <fstream>
 #include <string>
-#include <curl/curl.h>
 #include "Struct/obfuscate.h"
 #include "Tools.h"
 
@@ -332,47 +331,8 @@ inline void StartGUI() {
     }
 }
 
-// Updated Verification Logic for JSON Server
-#include "nlohmann/json.hpp" // Make sure to include your JSON library
-using json = nlohmann::json;
-
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* s) {
-    s->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
-
-bool CheckServer(const char* key, const char* device_id) {
-    CURL* curl = curl_easy_init();
-    if (!curl) return false;
-    std::string readBuffer;
-    
-    json j;
-    j["key"] = key;
-    j["device_id"] = device_id;
-    std::string jsonData = j.dump();
-
-    struct curl_slist *headers = NULL;
-    headers = curl_slist_append(headers, "Content-Type: application/json");
-
-    curl_easy_setopt(curl, CURLOPT_URL, "https://bilal828.pythonanywhere.com/verify");
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
-    
-    CURLcode res = curl_easy_perform(curl);
-    curl_easy_cleanup(curl);
-    
-    if (res == CURLE_OK) {
-        auto response = json::parse(readBuffer);
-        return response.value("valid", false);
-    }
-    return false;
-}
 
 void StartHacks() {
-    while (!isAuthorized) sleep(2);
     pid_t pid = getpid();
     while (!(il2cpp_base = get_module_base(pid, "libil2cpp.so"))) sleep(5);
     Il2CppAttach();
@@ -385,14 +345,6 @@ void StartHacks() {
     }
 }
 
-extern "C" JNIEXPORT void JNICALL
-Java_com_LOL_project_MenuService_verifyKeyNative(JNIEnv* env, jobject obj, jstring key) {
-    const char *k = env->GetStringUTFChars(key, 0);
-    // You should have a method in your Tools class to get device ID
-    const char *id = Tools::GetDeviceUniqueIdentifier(env, "YOUR_SECRET_SALT"); 
-    isAuthorized = CheckServer(k, id);
-    env->ReleaseStringUTFChars(key, k);
-}
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
     jvm = vm;
