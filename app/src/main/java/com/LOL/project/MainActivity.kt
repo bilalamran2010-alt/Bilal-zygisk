@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.Scanner
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,17 +40,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkKeyOnServer(key: String): Boolean {
         return try {
-            val url = URL("https://bilal828.pythonanywhere.com/verify?key=$key")
+            val url = URL("https://bilal828.pythonanywhere.com/verify")
             val conn = url.openConnection() as HttpURLConnection
-            conn.requestMethod = "GET"
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Content-Type", "application/json; utf-8")
+            conn.setRequestProperty("Accept", "application/json")
+            conn.doOutput = true
             conn.connectTimeout = 5000
-            
+
+            val jsonInput = JSONObject()
+            jsonInput.put("key", key)
+            jsonInput.put("device_id", "android_device_001")
+
+            conn.outputStream.use { os ->
+                val input = jsonInput.toString().toByteArray(Charsets.UTF_8)
+                os.write(input, 0, input.size)
+            }
+
             if (conn.responseCode == 200) {
-                val response = Scanner(conn.inputStream).useDelimiter("\\A").next()
-                return response.contains("true")
+                val response = conn.inputStream.bufferedReader().use { it.readText() }
+                return response.contains("\"success\": true")
             }
             false
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
