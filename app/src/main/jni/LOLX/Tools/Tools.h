@@ -1,12 +1,11 @@
 #pragma once
 
-
 #include <map>
 #include <jni.h>
+#include <string>
 #include "Dobby/dobby.h"
 
 namespace Tools {
-static bool VerifyKey(const char* key, const char* deviceId);
 
 	void Hook(void *target, void *replace, void **backup);
 	
@@ -29,5 +28,4 @@ static bool VerifyKey(const char* key, const char* deviceId);
 	const char *GetDeviceModel(JNIEnv *env);
 	const char *GetDeviceBrand(JNIEnv *env);
 	const char *GetDeviceUniqueIdentifier(JNIEnv *env, const char *uuid);
-	std::string CalcMD5(std::string s);
 }
