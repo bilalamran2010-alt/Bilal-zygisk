@@ -38,25 +38,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkKeyOnServer(key: String): Boolean {
-        try {
-            val url = URL("https://bilal828.pythonanywhere.com/verify")
-            val conn = url.openConnection() as HttpURLConnection
-            conn.requestMethod = "POST"
-            conn.setRequestProperty("Content-Type", "application/json; utf-8")
-            conn.doOutput = true
-            conn.connectTimeout = 5000
+    return try {
+        
+        val url = URL("https://bilal828.pythonanywhere.com/verify")
+        val conn = url.openConnection() as HttpURLConnection
+        conn.requestMethod = "POST"
+        conn.setRequestProperty("Content-Type", "application/json")
+        conn.setRequestProperty("Accept", "application/json")
+        conn.doOutput = true
+        conn.connectTimeout = 10000 
+        
 
-            val jsonInput = "{\"key\": \"$key\", \"device_id\": \"android_device_001\"}"
-            conn.outputStream.use { os ->
-                os.write(jsonInput.toByteArray(Charsets.UTF_8))
-            }
+        val jsonInput = "{\"key\": \"$key\", \"device_id\": \"android_device_001\"}"
+        conn.outputStream.use { os ->
+            os.write(jsonInput.toByteArray(Charsets.UTF_8))
+        }
 
+        val responseCode = conn.responseCode
+        if (responseCode == 200) {
             val response = conn.inputStream.bufferedReader().use { it.readText() }
-            android.util.Log.d("SERVER_RESPONSE", response)
-            return response.contains("\"success\": true")
-        } catch (e: Exception) {
-            android.util.Log.e("SERVER_ERROR", e.toString())
+            return response.contains("true")
+        } else {
+            android.util.Log.e("SERVER_ERROR", "Code: $responseCode")
             return false
         }
+    } catch (e: Exception) {
+        android.util.Log.e("SERVER_ERROR", e.toString())
+        false
     }
 }
