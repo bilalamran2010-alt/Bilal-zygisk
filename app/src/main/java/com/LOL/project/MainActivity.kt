@@ -10,6 +10,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,32 +39,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkKeyOnServer(key: String): Boolean {
-    return try {
-        
-        val url = URL("https://bilal828.pythonanywhere.com/verify")
-        val conn = url.openConnection() as HttpURLConnection
-        conn.requestMethod = "POST"
-        conn.setRequestProperty("Content-Type", "application/json")
-        conn.setRequestProperty("Accept", "application/json")
-        conn.doOutput = true
-        conn.connectTimeout = 10000 
-        
+        return try {
+            val url = URL("https://bilal828.pythonanywhere.com/verify")
+            val conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Content-Type", "application/json")
+            conn.doOutput = true
+            conn.connectTimeout = 10000
 
-        val jsonInput = "{\"key\": \"$key\", \"device_id\": \"android_device_001\"}"
-        conn.outputStream.use { os ->
-            os.write(jsonInput.toByteArray(Charsets.UTF_8))
-        }
+            val jsonInput = "{\"key\": \"$key\", \"device_id\": \"android_device_001\"}"
+            conn.outputStream.use { os ->
+                os.write(jsonInput.toByteArray(Charsets.UTF_8))
+            }
 
-        val responseCode = conn.responseCode
-        if (responseCode == 200) {
-            val response = conn.inputStream.bufferedReader().use { it.readText() }
-            return response.contains("true")
-        } else {
-            android.util.Log.e("SERVER_ERROR", "Code: $responseCode")
-            return false
+            if (conn.responseCode == 200) {
+                val response = conn.inputStream.bufferedReader().use { it.readText() }
+                return response.contains("true")
+            }
+            false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
-    } catch (e: Exception) {
-        android.util.Log.e("SERVER_ERROR", e.toString())
-        false
     }
 }
